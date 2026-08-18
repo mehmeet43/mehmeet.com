@@ -308,6 +308,16 @@ h3 {
     font-size: 13px;
 }
 
+.store-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+}
+
 
 /* --------------------------------------------------
    Experience
@@ -431,6 +441,10 @@ footer nav {
 
     .meta {
         gap: 10px;
+    }
+
+    .store-links {
+        gap: 6px 12px;
     }
 
     .work-row {
