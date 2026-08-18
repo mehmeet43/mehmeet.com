@@ -47,10 +47,7 @@ body {
 }
 
 .container {
-    width: min(
-        calc(100% - 48px),
-        var(--content-width)
-    );
+    width: min(calc(100% - 48px), var(--content-width));
 
     margin: 0 auto;
     padding: 88px 0 48px;
@@ -176,6 +173,13 @@ section {
 .item {
     position: relative;
 
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+
+    gap: 16px;
+
+    align-items: start;
+
     padding: 22px 14px;
     margin: 0 -14px;
 
@@ -191,6 +195,32 @@ section {
     background: var(--surface);
 
     transform: translateY(-1px);
+}
+
+
+/* App Store artwork */
+
+.app-icon {
+    display: block;
+
+    width: 52px;
+    height: 52px;
+
+    margin-top: 1px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.06),
+        0 2px 6px rgba(0, 0, 0, 0.05);
+
+    flex-shrink: 0;
+}
+
+.app-content {
+    min-width: 0;
 }
 
 .item-heading {
@@ -278,13 +308,13 @@ h3 {
 
 
 /* --------------------------------------------------
-   Selected Work
+   Experience
 -------------------------------------------------- */
 
 .work-row {
     display: grid;
 
-    grid-template-columns: 110px 1fr;
+    grid-template-columns: 110px minmax(0, 1fr);
 
     gap: 20px;
 
@@ -359,10 +389,7 @@ footer nav {
 @media (max-width: 600px) {
 
     .container {
-        width: min(
-            calc(100% - 36px),
-            var(--content-width)
-        );
+        width: min(calc(100% - 36px), var(--content-width));
 
         padding-top: 52px;
     }
@@ -376,6 +403,10 @@ footer nav {
     }
 
     .item {
+        grid-template-columns: 44px minmax(0, 1fr);
+
+        gap: 13px;
+
         padding-left: 8px;
         padding-right: 8px;
 
@@ -383,10 +414,30 @@ footer nav {
         margin-right: -8px;
     }
 
+    .app-icon {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 10px;
+    }
+
+    .item-heading {
+        gap: 10px;
+    }
+
+    .meta {
+        gap: 10px;
+    }
+
     .work-row {
         grid-template-columns: 1fr;
 
         gap: 4px;
+    }
+
+    .elsewhere {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     footer {
@@ -417,4 +468,9 @@ footer nav {
         --link: #2997ff;
     }
 
+    .app-icon {
+        box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.08),
+            0 2px 7px rgba(0, 0, 0, 0.25);
+    }
 }
