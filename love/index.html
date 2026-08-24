@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>❤️</title>
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="love-page">
+
+        <!-- İleride header eklemek istersen buraya -->
+
+        <div class="board">
+
+            <div class="names">
+                Ç. <span class="heart">❤️</span> Ş.
+            </div>
+
+            <div
+                id="love-counter"
+                class="counter"
+                aria-label="Sevgi sayacı">
+                0
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+        /*
+         * Sevgi Sayacı
+         *
+         * Ölçüm 1:
+         * 22.08.2026 04:46 TRT
+         * 16,255,000,000
+         *
+         * Ölçüm 2:
+         * 23.08.2026 12:56 TRT
+         * 17,105,527,318
+         */
+
+        const firstObservation = {
+            time: new Date("2026-08-22T04:46:00+03:00").getTime(),
+            value: 16255000000
+        };
+
+        const secondObservation = {
+            time: new Date("2026-08-23T12:56:00+03:00").getTime(),
+            value: 17105527318
+        };
+
+
+        // İki gerçek ölçümden saniyelik artışı hesapla.
+        const elapsedSeconds =
+            (secondObservation.time - firstObservation.time) / 1000;
+
+        const growthPerSecond =
+            (secondObservation.value - firstObservation.value)
+            / elapsedSeconds;
+
+
+        const counter =
+            document.getElementById("love-counter");
+
+
+        function currentLoveValue() {
+
+            const now = Date.now();
+
+            const secondsSinceLastObservation =
+                (now - secondObservation.time) / 1000;
+
+            return Math.floor(
+                secondObservation.value +
+                (secondsSinceLastObservation * growthPerSecond)
+            );
+        }
+
+
+        function updateCounter() {
+
+            const value = currentLoveValue();
+
+            counter.textContent =
+                value.toLocaleString("en-US");
+        }
+
+
+        // Sayfa açılır açılmaz doğru değeri göster.
+        updateCounter();
+
+        // Sonrasında canlı olarak güncelle.
+        setInterval(updateCounter, 1000);
+
+    </script>
+
+</body>
+</html>
