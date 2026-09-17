@@ -21,7 +21,12 @@
     <main class="love-page">
 
         <!-- Fotoğraf -->
-        <div id="photo-frame" class="photo-frame">
+        <button
+            id="photo-frame"
+            class="photo-frame"
+            type="button"
+            aria-label="fotoğrafın hikâyesini oku"
+        >
 
             <img
                 id="love-photo"
@@ -30,20 +35,29 @@
                 alt=""
             >
 
-        </div>
+            <!-- Metin varsa görünür -->
+            <div
+                id="story-hint"
+                class="story-hint"
+                aria-hidden="true"
+            >
+                · · ·
+            </div>
+
+        </button>
 
 
         <!-- Tahta -->
         <div class="board">
 
             <div class="names">
-                Ç. <span class="heart">❤️</span> Ş.
+                ç. <span class="heart">❤️</span> ş.
             </div>
 
             <div
                 id="love-counter"
                 class="counter"
-                aria-label="Sevgi sayacı"
+                aria-label="sevgi sayacı"
             >
                 0
             </div>
@@ -53,20 +67,43 @@
     </main>
 
 
+    <!-- ==================================================
+         HİKÂYE
+    =================================================== -->
+
+    <div
+        id="story-overlay"
+        class="story-overlay"
+        aria-hidden="true"
+    >
+
+        <div class="story-panel">
+
+            <button
+                id="story-close"
+                class="story-close"
+                type="button"
+                aria-label="kapat"
+            >
+                ×
+            </button>
+
+            <div
+                id="story-text"
+                class="story-text"
+            ></div>
+
+        </div>
+
+    </div>
+
+
     <script>
 
         /*
          * ==================================================
          * SEVGİ SAYACI
          * ==================================================
-         *
-         * Ölçüm 1
-         * 22.08.2026 04:46 TRT
-         * 16.255.000.000
-         *
-         * Ölçüm 2
-         * 23.08.2026 12:56 TRT
-         * 17.105.527.318
          */
 
         const firstObservation = {
@@ -88,11 +125,6 @@
             value: 17105527318
         };
 
-
-        /*
-         * İki ölçüm arasındaki gerçek artıştan
-         * saniyelik sevgi hızını hesapla.
-         */
 
         const elapsedSeconds =
             (
@@ -143,16 +175,7 @@
         }
 
 
-        /*
-         * İlk değeri hemen göster.
-         */
-
         updateCounter();
-
-
-        /*
-         * Sayacı saniyede bir güncelle.
-         */
 
         setInterval(
             updateCounter,
@@ -170,16 +193,21 @@
         const photos = [];
 
 
-        /*
-         * 19 dikey fotoğraf
-         */
-
         for (let i = 1; i <= 19; i++) {
+
+            const name =
+                `dikey-${String(i).padStart(2, "0")}`;
+
 
             photos.push({
 
+                name: name,
+
                 src:
-                    `photos/dikey-${String(i).padStart(2, "0")}.jpg`,
+                    `photos/${name}.jpg`,
+
+                text:
+                    `photos/${name}.txt`,
 
                 orientation:
                     "portrait"
@@ -187,16 +215,21 @@
         }
 
 
-        /*
-         * 13 yatay fotoğraf
-         */
-
         for (let i = 1; i <= 13; i++) {
+
+            const name =
+                `yatay-${String(i).padStart(2, "0")}`;
+
 
             photos.push({
 
+                name: name,
+
                 src:
-                    `photos/yatay-${String(i).padStart(2, "0")}.jpg`,
+                    `photos/${name}.jpg`,
+
+                text:
+                    `photos/${name}.txt`,
 
                 orientation:
                     "landscape"
@@ -209,9 +242,6 @@
          * ==================================================
          * SHUFFLE
          * ==================================================
-         *
-         * Bir tur içerisinde hiçbir fotoğraf
-         * ikinci kez gösterilmez.
          */
 
         function shuffledPhotos() {
@@ -219,10 +249,6 @@
             const shuffled =
                 [...photos];
 
-
-            /*
-             * Fisher-Yates shuffle
-             */
 
             for (
                 let i = shuffled.length - 1;
@@ -251,25 +277,11 @@
         }
 
 
-
-        /*
-         * İlk turu oluştur.
-         */
-
         let photoQueue =
             shuffledPhotos();
 
 
-        /*
-         * Bir önceki fotoğrafı da tutuyoruz.
-         *
-         * Böylece yeni tur başladığında,
-         * önceki turun son fotoğrafının
-         * hemen tekrar gelmesini engelleriz.
-         */
-
         let lastPhoto = null;
-
 
 
         function refillQueue() {
@@ -279,9 +291,9 @@
 
 
             /*
-             * Yeni turun ilk fotoğrafı,
-             * önceki turun son fotoğrafıysa
-             * başka bir fotoğrafla yer değiştir.
+             * Yeni turun ilk fotoğrafı
+             * önceki turun son fotoğrafıyla
+             * aynı olmasın.
              */
 
             if (
@@ -290,27 +302,18 @@
                 photoQueue[0].src === lastPhoto.src
             ) {
 
-                const swapIndex = 1;
-
-
                 [
                     photoQueue[0],
-                    photoQueue[swapIndex]
+                    photoQueue[1]
                 ] = [
-                    photoQueue[swapIndex],
+                    photoQueue[1],
                     photoQueue[0]
                 ];
             }
         }
 
 
-
         function getNextPhoto() {
-
-            /*
-             * 32 fotoğraf bittiyse
-             * yeni bir rastgele tur oluştur.
-             */
 
             if (photoQueue.length === 0) {
 
@@ -349,6 +352,16 @@
             );
 
 
+        const storyHint =
+            document.getElementById(
+                "story-hint"
+            );
+
+
+        let currentPhoto = null;
+
+        let currentStory = null;
+
         let changingPhoto = false;
 
 
@@ -370,34 +383,109 @@
 
 
 
+        /*
+         * Fotoğrafın .txt dosyasını kontrol et.
+         */
+
+        async function loadStory(
+            photoInfo
+        ) {
+
+            currentStory = null;
+
+            storyHint.classList.remove(
+                "visible"
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        photoInfo.text,
+                        {
+                            cache: "no-cache"
+                        }
+                    );
+
+
+                if (!response.ok) {
+                    return;
+                }
+
+
+                const text =
+                    (
+                        await response.text()
+                    ).trim();
+
+
+                if (!text) {
+                    return;
+                }
+
+
+                /*
+                 * Bu sırada fotoğraf değişmiş
+                 * olabilir.
+                 */
+
+                if (
+                    !currentPhoto ||
+                    currentPhoto.name !== photoInfo.name
+                ) {
+                    return;
+                }
+
+
+                currentStory =
+                    text;
+
+
+                storyHint.classList.add(
+                    "visible"
+                );
+
+            } catch {
+
+                /*
+                 * .txt yoksa hiçbir şey yapma.
+                 */
+
+            }
+        }
+
+
+
         function changePhoto(
             immediate = false
         ) {
-
-            /*
-             * Önceki transition henüz
-             * bitmediyse yeni transition başlatma.
-             */
 
             if (changingPhoto) {
                 return;
             }
 
 
-            changingPhoto = true;
+            /*
+             * Hikâye açıkken fotoğraf değiştirme.
+             */
+
+            if (
+                document.body.classList.contains(
+                    "story-open"
+                )
+            ) {
+                return;
+            }
+
+
+            changingPhoto =
+                true;
 
 
             const nextPhoto =
                 getNextPhoto();
 
-
-            /*
-             * Sadece sıradaki fotoğrafı
-             * önceden yükle.
-             *
-             * 32 fotoğrafın tamamını
-             * başlangıçta indirmiyoruz.
-             */
 
             const loader =
                 new Image();
@@ -405,10 +493,6 @@
 
             loader.onload = () => {
 
-
-                /*
-                 * Yeni fotoğrafı ekrana koy.
-                 */
 
                 const showPhoto = () => {
 
@@ -421,10 +505,19 @@
                         nextPhoto.src;
 
 
+                    currentPhoto =
+                        nextPhoto;
+
+
                     /*
-                     * Browser yeni src'yi çizdikten
-                     * sonra fade-in başlat.
+                     * Bu fotoğrafın metni
+                     * var mı kontrol et.
                      */
+
+                    loadStory(
+                        nextPhoto
+                    );
+
 
                     requestAnimationFrame(
                         () => {
@@ -436,6 +529,7 @@
                                         "visible"
                                     );
 
+
                                     changingPhoto =
                                         false;
                                 }
@@ -445,11 +539,6 @@
                 };
 
 
-                /*
-                 * Sayfa ilk açıldığında
-                 * fade-out gerekmiyor.
-                 */
-
                 if (immediate) {
 
                     showPhoto();
@@ -458,19 +547,15 @@
                 }
 
 
-                /*
-                 * Mevcut fotoğrafı soldur.
-                 */
-
                 photo.classList.remove(
                     "visible"
                 );
 
 
-                /*
-                 * Fade-out tamamlandıktan sonra
-                 * yeni fotoğrafı yerleştir.
-                 */
+                storyHint.classList.remove(
+                    "visible"
+                );
+
 
                 setTimeout(
                     showPhoto,
@@ -479,15 +564,10 @@
             };
 
 
-
-            /*
-             * Fotoğraf dosyasında sorun varsa
-             * galerinin tamamen durmasını engelle.
-             */
-
             loader.onerror = () => {
 
-                changingPhoto = false;
+                changingPhoto =
+                    false;
 
 
                 setTimeout(
@@ -497,13 +577,140 @@
             };
 
 
-            /*
-             * Yüklemeyi başlat.
-             */
-
             loader.src =
                 nextPhoto.src;
         }
+
+
+
+        /*
+         * ==================================================
+         * HİKÂYE OVERLAY
+         * ==================================================
+         */
+
+        const storyOverlay =
+            document.getElementById(
+                "story-overlay"
+            );
+
+
+        const storyText =
+            document.getElementById(
+                "story-text"
+            );
+
+
+        const storyClose =
+            document.getElementById(
+                "story-close"
+            );
+
+
+
+        function openStory() {
+
+            if (!currentStory) {
+                return;
+            }
+
+
+            /*
+             * textContent kullanıyoruz.
+             * .txt içindeki metin HTML olarak
+             * çalıştırılmıyor.
+             */
+
+            storyText.textContent =
+                currentStory;
+
+
+            storyOverlay.classList.add(
+                "visible"
+            );
+
+
+            storyOverlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            document.body.classList.add(
+                "story-open"
+            );
+        }
+
+
+
+        function closeStory() {
+
+            storyOverlay.classList.remove(
+                "visible"
+            );
+
+
+            storyOverlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+
+            document.body.classList.remove(
+                "story-open"
+            );
+        }
+
+
+
+        photoFrame.addEventListener(
+            "click",
+            openStory
+        );
+
+
+        storyClose.addEventListener(
+            "click",
+            closeStory
+        );
+
+
+        /*
+         * Panelin dışına dokununca kapat.
+         */
+
+        storyOverlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    storyOverlay
+                ) {
+
+                    closeStory();
+                }
+            }
+        );
+
+
+        /*
+         * Bilgisayarda ESC.
+         */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Escape"
+                ) {
+
+                    closeStory();
+                }
+            }
+        );
 
 
 
@@ -513,34 +720,24 @@
          * ==================================================
          */
 
-
-        /*
-         * İlk fotoğrafı hemen göster.
-         */
-
         changePhoto(true);
 
 
-
         /*
-         * Her 30 saniyede
-         * yeni fotoğraf.
+         * Her 30 saniyede bir.
          */
 
         setInterval(
 
             () => {
 
-                /*
-                 * Sekme görünür durumdaysa değiştir.
-                 *
-                 * Arka planda gereksiz fotoğraf
-                 * indirmiyoruz.
-                 */
-
                 if (
                     document.visibilityState ===
-                    "visible"
+                    "visible" &&
+
+                    !document.body.classList.contains(
+                        "story-open"
+                    )
                 ) {
 
                     changePhoto();
@@ -549,7 +746,6 @@
 
             30000
         );
-
 
     </script>
 
