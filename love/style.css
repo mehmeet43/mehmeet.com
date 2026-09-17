@@ -27,9 +27,11 @@ body {
 
 
 body {
+
     margin: 0;
 
-    background: var(--background);
+    background:
+        var(--background);
 
     font-family:
         -apple-system,
@@ -38,7 +40,8 @@ body {
         Arial,
         sans-serif;
 
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing:
+        antialiased;
 }
 
 
@@ -59,39 +62,35 @@ body {
     align-items: center;
     justify-content: center;
 
-    gap: clamp(
-        14px,
-        2.5svh,
-        26px
-    );
+    gap:
+        clamp(
+            12px,
+            2.2svh,
+            24px
+        );
 
-    padding: clamp(
-        14px,
-        2.5svh,
-        28px
-    );
+    padding:
+        clamp(
+            12px,
+            2.2svh,
+            26px
+        );
+
+    overflow: hidden;
 }
 
 
 /* --------------------------------------------------
-   Photo
+   Photo frame
 -------------------------------------------------- */
 
 .photo-frame {
 
     position: relative;
 
-    width: min(
-        520px,
-        90vw
-    );
-
-    height: min(
-        46svh,
-        500px
-    );
-
     overflow: hidden;
+
+    flex-shrink: 1;
 
     border-radius: 8px;
 
@@ -100,7 +99,7 @@ body {
             0,
             0,
             0,
-            0.04
+            0.035
         );
 
     box-shadow:
@@ -111,8 +110,56 @@ body {
             0,
             0.14
         );
+
+    transition:
+        width 0.7s ease,
+        height 0.7s ease;
 }
 
+
+/*
+ * Dikey fotoğraf
+ */
+
+.photo-frame.portrait {
+
+    width:
+        min(
+            390px,
+            82vw
+        );
+
+    height:
+        min(
+            48svh,
+            520px
+        );
+}
+
+
+/*
+ * Yatay fotoğraf
+ */
+
+.photo-frame.landscape {
+
+    width:
+        min(
+            540px,
+            90vw
+        );
+
+    height:
+        min(
+            40svh,
+            390px
+        );
+}
+
+
+/* --------------------------------------------------
+   Photo
+-------------------------------------------------- */
 
 .love-photo {
 
@@ -126,11 +173,12 @@ body {
 
     opacity: 0;
 
-    transform: scale(1.01);
+    transform:
+        scale(1.008);
 
     transition:
-        opacity 0.9s ease,
-        transform 6s ease;
+        opacity 0.7s ease,
+        transform 5s ease;
 }
 
 
@@ -138,7 +186,8 @@ body {
 
     opacity: 1;
 
-    transform: scale(1);
+    transform:
+        scale(1);
 }
 
 
@@ -150,25 +199,27 @@ body {
 
     position: relative;
 
-    width: min(
-        520px,
-        90vw
-    );
+    width:
+        min(
+            520px,
+            90vw
+        );
 
     flex-shrink: 0;
 
     padding:
         clamp(
-            24px,
-            3.5svh,
-            42px
-        )
-        24px
-        clamp(
             22px,
-            3.5svh,
+            3.2svh,
             38px
+        )
+        22px
+        clamp(
+            20px,
+            3svh,
+            34px
         );
+
 
     text-align: center;
 
@@ -209,6 +260,7 @@ body {
         solid
         var(--board-edge);
 
+
     border-radius: 5px;
 
 
@@ -222,7 +274,8 @@ body {
             0.15
         ),
 
-        inset 0 0 35px
+        inset
+        0 0 35px
         rgba(
             0,
             0,
@@ -251,16 +304,16 @@ body {
 
     font-size:
         clamp(
-            38px,
-            7vw,
-            62px
+            40px,
+            8vw,
+            58px
         );
 
-    font-weight: 600;
 
-    line-height: 1.05;
+    line-height: 1;
 
-    letter-spacing: 0.01em;
+    letter-spacing:
+        0.01em;
 
 
     text-shadow:
@@ -274,24 +327,27 @@ body {
 }
 
 
+/* --------------------------------------------------
+   Heart
+-------------------------------------------------- */
+
 .heart {
 
     display: inline-block;
 
     margin:
-        0
-        7px;
-
+        0 8px;
 
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         sans-serif;
 
+    font-size:
+        0.72em;
 
-    font-size: 0.72em;
-
-    vertical-align: 0.08em;
+    vertical-align:
+        0.08em;
 }
 
 
@@ -303,9 +359,9 @@ body {
 
     margin-top:
         clamp(
-            18px,
-            2.5svh,
-            28px
+            16px,
+            2.2svh,
+            26px
         );
 
 
@@ -327,11 +383,13 @@ body {
             31px
         );
 
+
     font-weight: 500;
 
     line-height: 1.2;
 
-    letter-spacing: 0.025em;
+    letter-spacing:
+        0.025em;
 
     font-variant-numeric:
         tabular-nums;
@@ -358,35 +416,49 @@ body {
 
         gap:
             clamp(
-                12px,
-                2svh,
-                18px
+                10px,
+                1.8svh,
+                16px
             );
 
         padding:
             clamp(
-                12px,
-                2svh,
-                18px
+                10px,
+                1.8svh,
+                16px
             );
     }
 
 
-    .photo-frame {
+    .photo-frame.portrait {
 
         width:
             min(
-                88vw,
-                430px
+                78vw,
+                370px
             );
 
         height:
             min(
-                43svh,
-                430px
+                46svh,
+                480px
+            );
+    }
+
+
+    .photo-frame.landscape {
+
+        width:
+            min(
+                92vw,
+                470px
             );
 
-        border-radius: 7px;
+        height:
+            min(
+                36svh,
+                330px
+            );
     }
 
 
@@ -394,17 +466,17 @@ body {
 
         width:
             min(
-                88vw,
-                430px
+                92vw,
+                470px
             );
 
         padding:
             clamp(
-                20px,
-                3svh,
-                30px
+                18px,
+                2.7svh,
+                28px
             )
-            16px;
+            14px;
     }
 
 
@@ -412,9 +484,9 @@ body {
 
         font-size:
             clamp(
-                36px,
-                10vw,
-                50px
+                34px,
+                9.5vw,
+                48px
             );
     }
 
@@ -430,41 +502,47 @@ body {
 
         margin-top:
             clamp(
-                16px,
-                2svh,
-                22px
+                14px,
+                1.8svh,
+                20px
             );
+
 
         font-size:
             clamp(
-                20px,
-                6vw,
-                27px
+                19px,
+                5.8vw,
+                26px
             );
     }
 }
 
 
 /* --------------------------------------------------
-   Very short screens
+   Short screens
 -------------------------------------------------- */
 
 @media (max-height: 700px) {
 
-    .photo-frame {
-        height: 39svh;
+    .photo-frame.portrait {
+        height: 40svh;
+    }
+
+
+    .photo-frame.landscape {
+        height: 33svh;
     }
 
 
     .board {
 
         padding:
-            18px
-            16px;
+            16px
+            14px;
     }
 
 
     .counter {
-        margin-top: 14px;
+        margin-top: 12px;
     }
 }
