@@ -20,18 +20,20 @@
 
     <main class="love-page">
 
-        <!-- Photo -->
+        <!-- Fotoğraf -->
         <div id="photo-frame" class="photo-frame">
+
             <img
                 id="love-photo"
                 class="love-photo"
                 src=""
                 alt=""
             >
+
         </div>
 
 
-        <!-- Board -->
+        <!-- Tahta -->
         <div class="board">
 
             <div class="names">
@@ -54,9 +56,9 @@
     <script>
 
         /*
-         * --------------------------------------------------
-         * Sevgi Sayacı
-         * --------------------------------------------------
+         * ==================================================
+         * SEVGİ SAYACI
+         * ==================================================
          *
          * Ölçüm 1
          * 22.08.2026 04:46 TRT
@@ -68,6 +70,7 @@
          */
 
         const firstObservation = {
+
             time: new Date(
                 "2026-08-22T04:46:00+03:00"
             ).getTime(),
@@ -77,6 +80,7 @@
 
 
         const secondObservation = {
+
             time: new Date(
                 "2026-08-23T12:56:00+03:00"
             ).getTime(),
@@ -84,6 +88,11 @@
             value: 17105527318
         };
 
+
+        /*
+         * İki ölçüm arasındaki gerçek artıştan
+         * saniyelik sevgi hızını hesapla.
+         */
 
         const elapsedSeconds =
             (
@@ -100,7 +109,9 @@
 
 
         const counter =
-            document.getElementById("love-counter");
+            document.getElementById(
+                "love-counter"
+            );
 
 
         function currentLoveValue() {
@@ -113,7 +124,9 @@
 
 
             return Math.floor(
+
                 secondObservation.value +
+
                 (
                     secondsSinceLastObservation *
                     growthPerSecond
@@ -130,7 +143,16 @@
         }
 
 
+        /*
+         * İlk değeri hemen göster.
+         */
+
         updateCounter();
+
+
+        /*
+         * Sayacı saniyede bir güncelle.
+         */
 
         setInterval(
             updateCounter,
@@ -140,89 +162,200 @@
 
 
         /*
-         * --------------------------------------------------
-         * Fotoğraflar
-         * --------------------------------------------------
+         * ==================================================
+         * FOTOĞRAFLAR
+         * ==================================================
          */
 
         const photos = [];
 
 
-        // 19 dikey
+        /*
+         * 19 dikey fotoğraf
+         */
 
         for (let i = 1; i <= 19; i++) {
 
             photos.push({
+
                 src:
                     `photos/dikey-${String(i).padStart(2, "0")}.jpg`,
 
-                orientation: "portrait"
+                orientation:
+                    "portrait"
             });
         }
 
 
-        // 13 yatay
+        /*
+         * 13 yatay fotoğraf
+         */
 
         for (let i = 1; i <= 13; i++) {
 
             photos.push({
+
                 src:
                     `photos/yatay-${String(i).padStart(2, "0")}.jpg`,
 
-                orientation: "landscape"
+                orientation:
+                    "landscape"
             });
         }
 
 
 
         /*
-         * --------------------------------------------------
-         * Galeri
-         * --------------------------------------------------
+         * ==================================================
+         * SHUFFLE
+         * ==================================================
+         *
+         * Bir tur içerisinde hiçbir fotoğraf
+         * ikinci kez gösterilmez.
+         */
+
+        function shuffledPhotos() {
+
+            const shuffled =
+                [...photos];
+
+
+            /*
+             * Fisher-Yates shuffle
+             */
+
+            for (
+                let i = shuffled.length - 1;
+                i > 0;
+                i--
+            ) {
+
+                const j =
+                    Math.floor(
+                        Math.random() *
+                        (i + 1)
+                    );
+
+
+                [
+                    shuffled[i],
+                    shuffled[j]
+                ] = [
+                    shuffled[j],
+                    shuffled[i]
+                ];
+            }
+
+
+            return shuffled;
+        }
+
+
+
+        /*
+         * İlk turu oluştur.
+         */
+
+        let photoQueue =
+            shuffledPhotos();
+
+
+        /*
+         * Bir önceki fotoğrafı da tutuyoruz.
+         *
+         * Böylece yeni tur başladığında,
+         * önceki turun son fotoğrafının
+         * hemen tekrar gelmesini engelleriz.
+         */
+
+        let lastPhoto = null;
+
+
+
+        function refillQueue() {
+
+            photoQueue =
+                shuffledPhotos();
+
+
+            /*
+             * Yeni turun ilk fotoğrafı,
+             * önceki turun son fotoğrafıysa
+             * başka bir fotoğrafla yer değiştir.
+             */
+
+            if (
+                lastPhoto &&
+                photoQueue.length > 1 &&
+                photoQueue[0].src === lastPhoto.src
+            ) {
+
+                const swapIndex = 1;
+
+
+                [
+                    photoQueue[0],
+                    photoQueue[swapIndex]
+                ] = [
+                    photoQueue[swapIndex],
+                    photoQueue[0]
+                ];
+            }
+        }
+
+
+
+        function getNextPhoto() {
+
+            /*
+             * 32 fotoğraf bittiyse
+             * yeni bir rastgele tur oluştur.
+             */
+
+            if (photoQueue.length === 0) {
+
+                refillQueue();
+            }
+
+
+            const nextPhoto =
+                photoQueue.shift();
+
+
+            lastPhoto =
+                nextPhoto;
+
+
+            return nextPhoto;
+        }
+
+
+
+        /*
+         * ==================================================
+         * GALERİ
+         * ==================================================
          */
 
         const photo =
-            document.getElementById("love-photo");
+            document.getElementById(
+                "love-photo"
+            );
+
 
         const photoFrame =
-            document.getElementById("photo-frame");
+            document.getElementById(
+                "photo-frame"
+            );
 
-
-        let currentIndex = -1;
 
         let changingPhoto = false;
 
 
 
-        function getRandomIndex() {
-
-            if (photos.length === 1) {
-                return 0;
-            }
-
-
-            let index;
-
-
-            do {
-
-                index =
-                    Math.floor(
-                        Math.random() *
-                        photos.length
-                    );
-
-            } while (
-                index === currentIndex
-            );
-
-
-            return index;
-        }
-
-
-
-        function setOrientation(orientation) {
+        function setOrientation(
+            orientation
+        ) {
 
             photoFrame.classList.remove(
                 "portrait",
@@ -237,7 +370,14 @@
 
 
 
-        function changePhoto(immediate = false) {
+        function changePhoto(
+            immediate = false
+        ) {
+
+            /*
+             * Önceki transition henüz
+             * bitmediyse yeni transition başlatma.
+             */
 
             if (changingPhoto) {
                 return;
@@ -247,17 +387,16 @@
             changingPhoto = true;
 
 
-            const nextIndex =
-                getRandomIndex();
-
-
             const nextPhoto =
-                photos[nextIndex];
+                getNextPhoto();
 
 
             /*
-             * Sadece sıradaki fotoğrafı yükle.
-             * 32 fotoğrafı birden indirmiyoruz.
+             * Sadece sıradaki fotoğrafı
+             * önceden yükle.
+             *
+             * 32 fotoğrafın tamamını
+             * başlangıçta indirmiyoruz.
              */
 
             const loader =
@@ -265,6 +404,11 @@
 
 
             loader.onload = () => {
+
+
+                /*
+                 * Yeni fotoğrafı ekrana koy.
+                 */
 
                 const showPhoto = () => {
 
@@ -277,20 +421,34 @@
                         nextPhoto.src;
 
 
-                    currentIndex =
-                        nextIndex;
+                    /*
+                     * Browser yeni src'yi çizdikten
+                     * sonra fade-in başlat.
+                     */
 
+                    requestAnimationFrame(
+                        () => {
 
-                    requestAnimationFrame(() => {
+                            requestAnimationFrame(
+                                () => {
 
-                        photo.classList.add(
-                            "visible"
-                        );
+                                    photo.classList.add(
+                                        "visible"
+                                    );
 
-                        changingPhoto = false;
-                    });
+                                    changingPhoto =
+                                        false;
+                                }
+                            );
+                        }
+                    );
                 };
 
+
+                /*
+                 * Sayfa ilk açıldığında
+                 * fade-out gerekmiyor.
+                 */
 
                 if (immediate) {
 
@@ -301,7 +459,7 @@
 
 
                 /*
-                 * Önce eski fotoğrafı soldur.
+                 * Mevcut fotoğrafı soldur.
                  */
 
                 photo.classList.remove(
@@ -310,8 +468,8 @@
 
 
                 /*
-                 * Fade bittikten sonra
-                 * yenisini göster.
+                 * Fade-out tamamlandıktan sonra
+                 * yeni fotoğrafı yerleştir.
                  */
 
                 setTimeout(
@@ -321,21 +479,27 @@
             };
 
 
+
+            /*
+             * Fotoğraf dosyasında sorun varsa
+             * galerinin tamamen durmasını engelle.
+             */
+
             loader.onerror = () => {
 
                 changingPhoto = false;
 
-                /*
-                 * Bir dosya bulunamazsa
-                 * galeriyi tamamen durdurma.
-                 */
 
                 setTimeout(
                     () => changePhoto(),
-                    1000
+                    500
                 );
             };
 
+
+            /*
+             * Yüklemeyi başlat.
+             */
 
             loader.src =
                 nextPhoto.src;
@@ -344,7 +508,14 @@
 
 
         /*
-         * İlk fotoğraf
+         * ==================================================
+         * BAŞLAT
+         * ==================================================
+         */
+
+
+        /*
+         * İlk fotoğrafı hemen göster.
          */
 
         changePhoto(true);
@@ -352,32 +523,33 @@
 
 
         /*
-         * 30 saniyede bir değiştir.
+         * Her 30 saniyede
+         * yeni fotoğraf.
          */
 
         setInterval(
-            () => changePhoto(),
+
+            () => {
+
+                /*
+                 * Sekme görünür durumdaysa değiştir.
+                 *
+                 * Arka planda gereksiz fotoğraf
+                 * indirmiyoruz.
+                 */
+
+                if (
+                    document.visibilityState ===
+                    "visible"
+                ) {
+
+                    changePhoto();
+                }
+            },
+
             30000
         );
 
-
-        /*
-         * Sekme arka plandayken gereksiz
-         * fotoğraf değiştirmeyelim.
-         */
-
-        document.addEventListener(
-            "visibilitychange",
-            () => {
-
-                if (
-                    document.visibilityState === "visible" &&
-                    !photo.src
-                ) {
-                    changePhoto(true);
-                }
-            }
-        );
 
     </script>
 
