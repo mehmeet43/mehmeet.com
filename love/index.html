@@ -449,74 +449,88 @@
          * hiçbir şey olmaz.
          */
 
-        async function loadStory(
-            photoInfo
-        ) {
+        async function loadStory(photoInfo) {
 
-            currentStory =
-                null;
+    currentStory = null;
 
+    try {
 
-            try {
-
-                const response =
-                    await fetch(
-                        photoInfo.text,
-                        {
-                            cache: "no-cache"
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    return;
-                }
-
-
-                const text =
-                    (
-                        await response.text()
-                    ).trim();
-
-
-                if (!text) {
-
-                    return;
-                }
-
-
-                /*
-                 * Fetch sürerken başka
-                 * fotoğrafa geçmiş olabiliriz.
-                 */
-
-                if (
-                    !currentPhoto ||
-                    currentPhoto.name !==
-                    photoInfo.name
-                ) {
-
-                    return;
-                }
-
-
-                currentStory =
-                    text;
-
-
-            } catch {
-
-                /*
-                 * .txt yok.
-                 *
-                 * Hiçbir şey gösterme.
-                 */
-
-                currentStory =
-                    null;
+        const response = await fetch(
+            photoInfo.text,
+            {
+                cache: "no-cache"
             }
+        );
+
+
+        /*
+         * Gerçek 404 geldiyse bırak.
+         */
+        if (!response.ok) {
+            return;
         }
+
+
+        const text =
+            (await response.text()).trim();
+
+
+        /*
+         * Boş dosya.
+         */
+        if (!text) {
+            return;
+        }
+
+
+        /*
+         * Cloudflare / static hosting bazen
+         * bulunamayan .txt yerine index.html
+         * döndürebilir.
+         *
+         * HTML geldiyse bunu hikâye sanma.
+         */
+        const lower =
+            text.toLowerCase();
+
+
+        if (
+            lower.startsWith("<!doctype html") ||
+            lower.startsWith("<html") ||
+            lower.includes("<head>") ||
+            lower.includes("<body>")
+        ) {
+            return;
+        }
+
+
+        /*
+         * Fetch sürerken kullanıcı başka
+         * fotoğrafa geçmiş olabilir.
+         */
+        if (
+            !currentPhoto ||
+            currentPhoto.name !== photoInfo.name
+        ) {
+            return;
+        }
+
+
+        /*
+         * Ancak gerçekten bir txt metni
+         * geldiyse hikâye olarak kabul et.
+         */
+        currentStory = text;
+
+    } catch (error) {
+
+        /*
+         * Dosya yok / erişilemiyor:
+         * hiçbir şey gösterme.
+         */
+        currentStory = null;
+    }
+}
 
 
 
@@ -681,56 +695,30 @@
 
         function openStory() {
 
-            /*
-             * Metin yoksa:
-             *
-             * HİÇBİR ŞEY YAPMA.
-             */
-
-            if (!currentStory) {
-
-                return;
-            }
+    if (!currentStory) {
+        return;
+    }
 
 
-            storyText.textContent =
-                currentStory;
+    storyText.textContent =
+        currentStory;
 
 
-            document.body.classList.add(
-                "story-open"
-            );
+    document.body.classList.add(
+        "story-open"
+    );
 
 
-            storyOverlay.classList.add(
-                "visible"
-            );
+    storyOverlay.classList.add(
+        "visible"
+    );
 
 
-            storyOverlay.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-        }
-
-
-        function closeStory() {
-
-            storyOverlay.classList.remove(
-                "visible"
-            );
-
-
-            storyOverlay.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-
-            document.body.classList.remove(
-                "story-open"
-            );
-        }
+    storyOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
 
 
 
