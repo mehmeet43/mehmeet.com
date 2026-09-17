@@ -19,7 +19,15 @@
 
     <main class="love-page">
 
-        <!-- İleride header eklemek istersen buraya -->
+        <div class="photo-frame">
+            <img
+                id="love-photo"
+                class="love-photo"
+                src=""
+                alt=""
+            >
+        </div>
+
 
         <div class="board">
 
@@ -41,35 +49,49 @@
 
     <script>
         /*
+         * --------------------------------------------------
          * Sevgi Sayacı
+         * --------------------------------------------------
          *
          * Ölçüm 1:
          * 22.08.2026 04:46 TRT
-         * 16,255,000,000
+         * 16.255.000.000
          *
          * Ölçüm 2:
          * 23.08.2026 12:56 TRT
-         * 17,105,527,318
+         * 17.105.527.318
          */
 
         const firstObservation = {
-            time: new Date("2026-08-22T04:46:00+03:00").getTime(),
+            time: new Date(
+                "2026-08-22T04:46:00+03:00"
+            ).getTime(),
+
             value: 16255000000
         };
 
+
         const secondObservation = {
-            time: new Date("2026-08-23T12:56:00+03:00").getTime(),
+            time: new Date(
+                "2026-08-23T12:56:00+03:00"
+            ).getTime(),
+
             value: 17105527318
         };
 
 
-        // İki gerçek ölçümden saniyelik artışı hesapla.
         const elapsedSeconds =
-            (secondObservation.time - firstObservation.time) / 1000;
+            (
+                secondObservation.time -
+                firstObservation.time
+            ) / 1000;
+
 
         const growthPerSecond =
-            (secondObservation.value - firstObservation.value)
-            / elapsedSeconds;
+            (
+                secondObservation.value -
+                firstObservation.value
+            ) / elapsedSeconds;
 
 
         const counter =
@@ -81,29 +103,210 @@
             const now = Date.now();
 
             const secondsSinceLastObservation =
-                (now - secondObservation.time) / 1000;
+                (
+                    now -
+                    secondObservation.time
+                ) / 1000;
+
 
             return Math.floor(
                 secondObservation.value +
-                (secondsSinceLastObservation * growthPerSecond)
+                (
+                    secondsSinceLastObservation *
+                    growthPerSecond
+                )
             );
         }
 
 
         function updateCounter() {
 
-            const value = currentLoveValue();
+            const value =
+                currentLoveValue();
+
 
             counter.textContent =
-                value.toLocaleString("en-US");
+                value.toLocaleString("tr-TR");
         }
 
 
-        // Sayfa açılır açılmaz doğru değeri göster.
         updateCounter();
 
-        // Sonrasında canlı olarak güncelle.
-        setInterval(updateCounter, 1000);
+        setInterval(
+            updateCounter,
+            1000
+        );
+
+
+        /*
+         * --------------------------------------------------
+         * Fotoğraf Galerisi
+         * --------------------------------------------------
+         */
+
+        const photos = [
+            "photos/01.jpg",
+            "photos/02.jpg",
+            "photos/03.jpg",
+            "photos/04.jpg",
+            "photos/05.jpg",
+            "photos/06.jpg",
+            "photos/07.jpg",
+            "photos/08.jpg",
+            "photos/09.jpg",
+            "photos/10.jpg"
+        ];
+
+
+        const photoElement =
+            document.getElementById("love-photo");
+
+
+        let currentPhotoIndex = -1;
+
+
+        function randomPhotoIndex() {
+
+            if (photos.length <= 1) {
+                return 0;
+            }
+
+
+            let nextIndex;
+
+            do {
+
+                nextIndex =
+                    Math.floor(
+                        Math.random() *
+                        photos.length
+                    );
+
+            } while (
+                nextIndex === currentPhotoIndex
+            );
+
+
+            return nextIndex;
+        }
+
+
+        function showNextPhoto(immediate = false) {
+
+            const nextIndex =
+                randomPhotoIndex();
+
+
+            const nextPhoto =
+                photos[nextIndex];
+
+
+            /*
+             * Yeni fotoğrafı önce belleğe al.
+             * Böylece geçiş sırasında boş görüntü oluşmaz.
+             */
+
+            const image =
+                new Image();
+
+
+            image.onload = () => {
+
+                if (immediate) {
+
+                    photoElement.src =
+                        nextPhoto;
+
+                    photoElement.classList.add(
+                        "visible"
+                    );
+
+                    currentPhotoIndex =
+                        nextIndex;
+
+                    return;
+                }
+
+
+                /*
+                 * Önce mevcut fotoğrafı soldur.
+                 */
+
+                photoElement.classList.remove(
+                    "visible"
+                );
+
+
+                /*
+                 * Fade-out tamamlandıktan sonra
+                 * yeni fotoğrafı göster.
+                 */
+
+                setTimeout(() => {
+
+                    photoElement.src =
+                        nextPhoto;
+
+                    currentPhotoIndex =
+                        nextIndex;
+
+
+                    requestAnimationFrame(() => {
+
+                        photoElement.classList.add(
+                            "visible"
+                        );
+
+                    });
+
+                }, 900);
+            };
+
+
+            image.src =
+                nextPhoto;
+        }
+
+
+        /*
+         * İlk fotoğraf rastgele.
+         */
+
+        showNextPhoto(true);
+
+
+        /*
+         * Her 30 saniyede bir değiştir.
+         */
+
+        setInterval(() => {
+
+            showNextPhoto();
+
+        }, 30000);
+
+
+        /*
+         * İlk fotoğraf geldikten sonra diğerlerini
+         * tarayıcı önbelleğine almaya başla.
+         */
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                photos.forEach(
+                    photo => {
+
+                        const image =
+                            new Image();
+
+                        image.src =
+                            photo;
+                    }
+                );
+            }
+        );
 
     </script>
 
