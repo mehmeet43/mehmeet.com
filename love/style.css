@@ -1,15 +1,26 @@
 :root {
 
-    --background: #f5f1e8;
+    --background:
+        #f5f1e8;
 
-    --board: #2d4a3e;
-    --board-edge: #6d4c35;
+    --board:
+        #2d4a3e;
 
-    --chalk: #f7f3e8;
+    --board-edge:
+        #6d4c35;
+
+    --chalk:
+        #f7f3e8;
 
     --chalk-soft:
-        rgba(247, 243, 232, 0.72);
+        rgba(
+            247,
+            243,
+            232,
+            0.72
+        );
 }
+
 
 
 /* ==================================================
@@ -17,23 +28,29 @@
 ================================================== */
 
 * {
-    box-sizing: border-box;
+    box-sizing:
+        border-box;
 }
 
 
 html,
 body {
 
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
 
-    margin: 0;
+    height:
+        100%;
+
+    margin:
+        0;
 }
 
 
 body {
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     background:
         var(--background);
@@ -52,21 +69,33 @@ body {
 
 
 /* ==================================================
-   PAGE
+   SAYFA
 ================================================== */
 
 .love-page {
 
-    width: 100%;
+    width:
+        100%;
 
-    height: 100vh;
-    height: 100svh;
+    height:
+        100vh;
 
-    display: flex;
-    flex-direction: column;
+    height:
+        100svh;
 
-    align-items: center;
-    justify-content: center;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
 
     gap:
         clamp(
@@ -75,33 +104,52 @@ body {
             20px
         );
 
+
     padding:
+
         max(
             10px,
             env(safe-area-inset-top)
         )
+
         12px
+
         max(
             10px,
             env(safe-area-inset-bottom)
         );
 
-    overflow: hidden;
+
+    overflow:
+        hidden;
+
+
+    cursor:
+        pointer;
 }
 
 
 
 /* ==================================================
-   PHOTO FRAME
+   FOTOĞRAF ÇERÇEVESİ
 ================================================== */
 
 .photo-frame {
 
-    appearance: none;
+    appearance:
+        none;
 
-    -webkit-appearance: none;
+    -webkit-appearance:
+        none;
 
-    position: relative;
+
+    position:
+        relative;
+
+
+    /*
+     * Tahtadan kalan alanı kullan.
+     */
 
     flex:
         1 1 0;
@@ -109,8 +157,10 @@ body {
     min-height:
         0;
 
+
     max-width:
         94vw;
+
 
     margin:
         0;
@@ -118,11 +168,14 @@ body {
     padding:
         0;
 
+
     border:
         0;
 
+
     overflow:
         hidden;
+
 
     display:
         flex;
@@ -133,16 +186,14 @@ body {
     justify-content:
         center;
 
+
     border-radius:
         8px;
 
+
     background:
-        rgba(
-            0,
-            0,
-            0,
-            0.035
-        );
+        transparent;
+
 
     box-shadow:
         0 10px 28px
@@ -153,28 +204,20 @@ body {
             0.13
         );
 
+
     cursor:
-        default;
+        pointer;
+
 
     transition:
         width 0.7s ease;
 }
 
 
-/*
- * Metni olan fotoğrafta
- * tıklanabilir hissi.
- */
 
-.photo-frame:has(
-    .story-hint.visible
-) {
-
-    cursor:
-        pointer;
-}
-
-
+/* ==================================================
+   DİKEY
+================================================== */
 
 .photo-frame.portrait {
 
@@ -185,6 +228,11 @@ body {
         );
 }
 
+
+
+/* ==================================================
+   YATAY
+================================================== */
 
 .photo-frame.landscape {
 
@@ -198,7 +246,7 @@ body {
 
 
 /* ==================================================
-   PHOTO
+   FOTOĞRAF
 ================================================== */
 
 .love-photo {
@@ -206,11 +254,13 @@ body {
     display:
         block;
 
+
     width:
         100%;
 
     height:
         100%;
+
 
     object-fit:
         contain;
@@ -218,15 +268,30 @@ body {
     object-position:
         center;
 
+
     opacity:
         0;
 
+
     transform:
-        scale(0.995);
+        scale(
+            1.008
+        );
+
 
     transition:
-        opacity 0.7s ease,
-        transform 1.2s ease;
+
+        opacity
+        0.7s
+        ease,
+
+        transform
+        5s
+        ease;
+
+
+    pointer-events:
+        none;
 }
 
 
@@ -236,93 +301,15 @@ body {
         1;
 
     transform:
-        scale(1);
+        scale(
+            1
+        );
 }
 
 
 
 /* ==================================================
-   STORY HINT
-================================================== */
-
-.story-hint {
-
-    position:
-        absolute;
-
-    right:
-        12px;
-
-    bottom:
-        10px;
-
-    padding:
-        3px 9px 6px;
-
-    border-radius:
-        20px;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.9
-        );
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.32
-        );
-
-    backdrop-filter:
-        blur(8px);
-
-    -webkit-backdrop-filter:
-        blur(8px);
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size:
-        16px;
-
-    line-height:
-        1;
-
-    opacity:
-        0;
-
-    transform:
-        translateY(4px);
-
-    pointer-events:
-        none;
-
-    transition:
-        opacity 0.4s ease,
-        transform 0.4s ease;
-}
-
-
-.story-hint.visible {
-
-    opacity:
-        1;
-
-    transform:
-        translateY(0);
-}
-
-
-
-/* ==================================================
-   BOARD
+   TAHTA
 ================================================== */
 
 .board {
@@ -330,68 +317,88 @@ body {
     position:
         relative;
 
+
     width:
         min(
             520px,
             90vw
         );
 
+
     flex-shrink:
         0;
 
+
     padding:
+
         clamp(
             20px,
             3svh,
             36px
         )
+
         22px
+
         clamp(
             18px,
             2.8svh,
             32px
         );
 
+
     text-align:
         center;
+
 
     background:
 
         radial-gradient(
+
             circle at 30% 20%,
+
             rgba(
                 255,
                 255,
                 255,
                 0.025
             ),
+
             transparent 38%
         ),
 
         radial-gradient(
+
             circle at 70% 75%,
+
             rgba(
                 0,
                 0,
                 0,
                 0.06
             ),
+
             transparent 42%
         ),
 
         var(--board);
 
+
     border:
+
         clamp(
             7px,
             1.2vw,
             11px
         )
+
         solid
+
         var(--board-edge);
+
 
     border-radius:
         5px;
+
 
     box-shadow:
 
@@ -411,12 +418,20 @@ body {
             0,
             0.12
         );
+
+
+    /*
+     * Tahtaya tıklama davranışı yok.
+     */
+
+    cursor:
+        default;
 }
 
 
 
 /* ==================================================
-   NAMES
+   İSİMLER
 ================================================== */
 
 .names {
@@ -424,27 +439,36 @@ body {
     color:
         var(--chalk);
 
+
     font-family:
+
         "Bradley Hand",
         "Chalkboard SE",
         "Comic Sans MS",
         cursive;
 
+
     font-size:
+
         clamp(
             38px,
             8vw,
             56px
         );
 
+
     line-height:
         1;
+
 
     letter-spacing:
         0.01em;
 
+
     text-shadow:
+
         0 0 1px
+
         rgba(
             255,
             255,
@@ -456,7 +480,7 @@ body {
 
 
 /* ==================================================
-   HEART
+   KALP
 ================================================== */
 
 .heart {
@@ -464,16 +488,20 @@ body {
     display:
         inline-block;
 
+
     margin:
         0 8px;
+
 
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         sans-serif;
 
+
     font-size:
         0.72em;
+
 
     vertical-align:
         0.08em;
@@ -482,48 +510,61 @@ body {
 
 
 /* ==================================================
-   COUNTER
+   SAYAÇ
 ================================================== */
 
 .counter {
 
     margin-top:
+
         clamp(
             14px,
             2svh,
             24px
         );
 
+
     color:
         var(--chalk-soft);
 
+
     font-family:
+
         "Chalkboard SE",
         "Bradley Hand",
         -apple-system,
         sans-serif;
 
+
     font-size:
+
         clamp(
             20px,
             4.5vw,
             30px
         );
 
+
     font-weight:
         500;
+
 
     line-height:
         1.2;
 
+
     letter-spacing:
         0.025em;
+
 
     font-variant-numeric:
         tabular-nums;
 
+
     text-shadow:
+
         0 0 1px
+
         rgba(
             255,
             255,
@@ -535,7 +576,7 @@ body {
 
 
 /* ==================================================
-   STORY OVERLAY
+   HİKÂYE ARKA PLANI
 ================================================== */
 
 .story-overlay {
@@ -543,11 +584,14 @@ body {
     position:
         fixed;
 
+
     inset:
         0;
 
+
     z-index:
-        100;
+        1000;
+
 
     display:
         flex;
@@ -558,30 +602,30 @@ body {
     justify-content:
         center;
 
+
     padding:
-        max(
-            20px,
-            env(safe-area-inset-top)
-        )
-        18px
-        max(
-            20px,
-            env(safe-area-inset-bottom)
-        );
+        20px;
+
 
     background:
         rgba(
-            25,
-            23,
-            20,
-            0.72
+            24,
+            22,
+            19,
+            0.68
         );
 
+
     backdrop-filter:
-        blur(12px);
+        blur(
+            8px
+        );
 
     -webkit-backdrop-filter:
-        blur(12px);
+        blur(
+            8px
+        );
+
 
     opacity:
         0;
@@ -589,9 +633,20 @@ body {
     visibility:
         hidden;
 
+
     transition:
-        opacity 0.45s ease,
-        visibility 0.45s ease;
+
+        opacity
+        0.45s
+        ease,
+
+        visibility
+        0.45s
+        ease;
+
+
+    cursor:
+        pointer;
 }
 
 
@@ -607,7 +662,7 @@ body {
 
 
 /* ==================================================
-   STORY PANEL
+   HİKÂYE PANELİ
 ================================================== */
 
 .story-panel {
@@ -615,11 +670,13 @@ body {
     position:
         relative;
 
+
     width:
         min(
             620px,
             92vw
         );
+
 
     max-height:
         min(
@@ -627,39 +684,52 @@ body {
             760px
         );
 
+
     overflow-y:
         auto;
+
 
     -webkit-overflow-scrolling:
         touch;
 
+
     padding:
+
         clamp(
             38px,
             7vw,
             64px
         );
 
+
     background:
         #f5f1e8;
+
 
     border-radius:
         8px;
 
+
     box-shadow:
+
         0 24px 70px
+
         rgba(
             0,
             0,
             0,
             0.28
         );
+
+
+    cursor:
+        default;
 }
 
 
 
 /* ==================================================
-   STORY TEXT
+   HİKÂYE METNİ
 ================================================== */
 
 .story-text {
@@ -667,23 +737,34 @@ body {
     color:
         #34312d;
 
+
     font-family:
+
         Georgia,
         "Times New Roman",
         serif;
 
+
     font-size:
+
         clamp(
             17px,
             2.1vw,
             20px
         );
 
+
     line-height:
         1.72;
 
+
     letter-spacing:
         0.002em;
+
+
+    /*
+     * TXT içindeki boş satırları koru.
+     */
 
     white-space:
         pre-line;
@@ -692,7 +773,7 @@ body {
 
 
 /* ==================================================
-   CLOSE
+   KAPAT
 ================================================== */
 
 .story-close {
@@ -703,8 +784,10 @@ body {
     -webkit-appearance:
         none;
 
+
     position:
         absolute;
+
 
     top:
         13px;
@@ -712,17 +795,21 @@ body {
     right:
         17px;
 
+
     margin:
         0;
 
     padding:
         0;
 
+
     border:
         0;
 
+
     background:
         transparent;
+
 
     color:
         rgba(
@@ -732,19 +819,24 @@ body {
             0.55
         );
 
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         sans-serif;
 
+
     font-size:
         30px;
+
 
     font-weight:
         300;
 
+
     line-height:
         1;
+
 
     cursor:
         pointer;
@@ -763,12 +855,16 @@ body {
         gap:
             9px;
 
+
         padding:
+
             max(
                 8px,
                 env(safe-area-inset-top)
             )
+
             8px
+
             max(
                 8px,
                 env(safe-area-inset-bottom)
@@ -804,12 +900,15 @@ body {
                 430px
             );
 
+
         padding:
+
             clamp(
                 14px,
                 2.1svh,
                 22px
             )
+
             14px;
     }
 
@@ -817,6 +916,7 @@ body {
     .names {
 
         font-size:
+
             clamp(
                 34px,
                 9vw,
@@ -838,13 +938,16 @@ body {
     .counter {
 
         margin-top:
+
             clamp(
                 9px,
                 1.5svh,
                 16px
             );
 
+
         font-size:
+
             clamp(
                 18px,
                 5.5vw,
@@ -855,17 +958,20 @@ body {
 
     /*
      * Hikâye telefonda
-     * neredeyse tam ekran.
+     * ekranın çoğunu kullanabilir.
      */
 
     .story-overlay {
 
         padding:
+
             max(
                 12px,
                 env(safe-area-inset-top)
             )
+
             10px
+
             max(
                 12px,
                 env(safe-area-inset-bottom)
@@ -878,13 +984,16 @@ body {
         width:
             100%;
 
+
         max-height:
             88svh;
+
 
         padding:
             44px
             26px
             34px;
+
 
         border-radius:
             7px;
@@ -896,6 +1005,7 @@ body {
         font-size:
             17px;
 
+
         line-height:
             1.68;
     }
@@ -904,23 +1014,30 @@ body {
 
 
 /* ==================================================
-   SHORT SCREENS
+   KISA EKRANLAR
 ================================================== */
 
 @media (max-height: 700px) {
 
     .love-page {
-        gap: 7px;
+
+        gap:
+            7px;
     }
 
 
     .board {
-        padding: 12px 14px;
+
+        padding:
+            12px
+            14px;
     }
 
 
     .names {
-        font-size: 32px;
+
+        font-size:
+            32px;
     }
 
 
@@ -928,6 +1045,7 @@ body {
 
         margin-top:
             8px;
+
 
         font-size:
             18px;
@@ -937,18 +1055,23 @@ body {
 
 
 /* ==================================================
-   VERY SHORT SCREENS
+   ÇOK KISA EKRANLAR
 ================================================== */
 
 @media (max-height: 560px) {
 
     .board {
-        padding: 9px 12px;
+
+        padding:
+            9px
+            12px;
     }
 
 
     .names {
-        font-size: 28px;
+
+        font-size:
+            28px;
     }
 
 
@@ -956,6 +1079,7 @@ body {
 
         margin-top:
             5px;
+
 
         font-size:
             16px;

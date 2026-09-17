@@ -18,14 +18,18 @@
 
 <body>
 
-    <main class="love-page">
+    <main
+        id="love-page"
+        class="love-page"
+    >
 
-        <!-- Fotoğraf -->
+        <!-- FOTOĞRAF -->
+
         <button
             id="photo-frame"
-            class="photo-frame"
+            class="photo-frame portrait"
             type="button"
-            aria-label="fotoğrafın hikâyesini oku"
+            aria-label="fotoğraf"
         >
 
             <img
@@ -35,19 +39,11 @@
                 alt=""
             >
 
-            <!-- Metin varsa görünür -->
-            <div
-                id="story-hint"
-                class="story-hint"
-                aria-hidden="true"
-            >
-                · · ·
-            </div>
-
         </button>
 
 
-        <!-- Tahta -->
+        <!-- TAHTA -->
+
         <div class="board">
 
             <div class="names">
@@ -67,9 +63,8 @@
     </main>
 
 
-    <!-- ==================================================
-         HİKÂYE
-    =================================================== -->
+
+    <!-- HİKÂYE -->
 
     <div
         id="story-overlay"
@@ -98,6 +93,7 @@
     </div>
 
 
+
     <script>
 
         /*
@@ -107,7 +103,6 @@
          */
 
         const firstObservation = {
-
             time: new Date(
                 "2026-08-22T04:46:00+03:00"
             ).getTime(),
@@ -117,7 +112,6 @@
 
 
         const secondObservation = {
-
             time: new Date(
                 "2026-08-23T12:56:00+03:00"
             ).getTime(),
@@ -156,9 +150,7 @@
 
 
             return Math.floor(
-
                 secondObservation.value +
-
                 (
                     secondsSinceLastObservation *
                     growthPerSecond
@@ -193,6 +185,10 @@
         const photos = [];
 
 
+        /*
+         * 19 dikey
+         */
+
         for (let i = 1; i <= 19; i++) {
 
             const name =
@@ -214,6 +210,10 @@
             });
         }
 
+
+        /*
+         * 13 yatay
+         */
 
         for (let i = 1; i <= 13; i++) {
 
@@ -242,16 +242,19 @@
          * ==================================================
          * SHUFFLE
          * ==================================================
+         *
+         * 32 fotoğrafın tamamı gösterilmeden
+         * hiçbiri tekrar etmez.
          */
 
         function shuffledPhotos() {
 
-            const shuffled =
+            const array =
                 [...photos];
 
 
             for (
-                let i = shuffled.length - 1;
+                let i = array.length - 1;
                 i > 0;
                 i--
             ) {
@@ -264,16 +267,16 @@
 
 
                 [
-                    shuffled[i],
-                    shuffled[j]
+                    array[i],
+                    array[j]
                 ] = [
-                    shuffled[j],
-                    shuffled[i]
+                    array[j],
+                    array[i]
                 ];
             }
 
 
-            return shuffled;
+            return array;
         }
 
 
@@ -281,7 +284,8 @@
             shuffledPhotos();
 
 
-        let lastPhoto = null;
+        let lastPhoto =
+            null;
 
 
         function refillQueue() {
@@ -291,9 +295,8 @@
 
 
             /*
-             * Yeni turun ilk fotoğrafı
-             * önceki turun son fotoğrafıyla
-             * aynı olmasın.
+             * Yeni turun ilk fotoğrafı,
+             * önceki turun sonuncusu olmasın.
              */
 
             if (
@@ -315,7 +318,9 @@
 
         function getNextPhoto() {
 
-            if (photoQueue.length === 0) {
+            if (
+                photoQueue.length === 0
+            ) {
 
                 refillQueue();
             }
@@ -336,13 +341,13 @@
 
         /*
          * ==================================================
-         * GALERİ
+         * ELEMENTLER
          * ==================================================
          */
 
-        const photo =
+        const lovePage =
             document.getElementById(
-                "love-photo"
+                "love-page"
             );
 
 
@@ -352,19 +357,67 @@
             );
 
 
-        const storyHint =
+        const photo =
             document.getElementById(
-                "story-hint"
+                "love-photo"
             );
 
 
-        let currentPhoto = null;
+        const board =
+            document.querySelector(
+                ".board"
+            );
 
-        let currentStory = null;
 
-        let changingPhoto = false;
+        const storyOverlay =
+            document.getElementById(
+                "story-overlay"
+            );
 
 
+        const storyPanel =
+            document.querySelector(
+                ".story-panel"
+            );
+
+
+        const storyText =
+            document.getElementById(
+                "story-text"
+            );
+
+
+        const storyClose =
+            document.getElementById(
+                "story-close"
+            );
+
+
+
+        /*
+         * ==================================================
+         * DURUM
+         * ==================================================
+         */
+
+        let currentPhoto =
+            null;
+
+
+        let currentStory =
+            null;
+
+
+        let changingPhoto =
+            false;
+
+
+
+        /*
+         * ==================================================
+         * FOTOĞRAF YÖNÜ
+         * ==================================================
+         */
 
         function setOrientation(
             orientation
@@ -384,18 +437,24 @@
 
 
         /*
-         * Fotoğrafın .txt dosyasını kontrol et.
+         * ==================================================
+         * METNİ YÜKLE
+         * ==================================================
+         *
+         * Aynı isimli .txt yoksa:
+         *
+         * currentStory = null
+         *
+         * ve fotoğrafa tıklanınca
+         * hiçbir şey olmaz.
          */
 
         async function loadStory(
             photoInfo
         ) {
 
-            currentStory = null;
-
-            storyHint.classList.remove(
-                "visible"
-            );
+            currentStory =
+                null;
 
 
             try {
@@ -410,6 +469,7 @@
 
 
                 if (!response.ok) {
+
                     return;
                 }
 
@@ -421,19 +481,22 @@
 
 
                 if (!text) {
+
                     return;
                 }
 
 
                 /*
-                 * Bu sırada fotoğraf değişmiş
-                 * olabilir.
+                 * Fetch sürerken başka
+                 * fotoğrafa geçmiş olabiliriz.
                  */
 
                 if (
                     !currentPhoto ||
-                    currentPhoto.name !== photoInfo.name
+                    currentPhoto.name !==
+                    photoInfo.name
                 ) {
+
                     return;
                 }
 
@@ -442,32 +505,39 @@
                     text;
 
 
-                storyHint.classList.add(
-                    "visible"
-                );
-
             } catch {
 
                 /*
-                 * .txt yoksa hiçbir şey yapma.
+                 * .txt yok.
+                 *
+                 * Hiçbir şey gösterme.
                  */
 
+                currentStory =
+                    null;
             }
         }
 
 
+
+        /*
+         * ==================================================
+         * FOTOĞRAFI DEĞİŞTİR
+         * ==================================================
+         */
 
         function changePhoto(
             immediate = false
         ) {
 
             if (changingPhoto) {
+
                 return;
             }
 
 
             /*
-             * Hikâye açıkken fotoğraf değiştirme.
+             * Yazı okunurken değiştirme.
              */
 
             if (
@@ -475,6 +545,7 @@
                     "story-open"
                 )
             ) {
+
                 return;
             }
 
@@ -496,6 +567,14 @@
 
                 const showPhoto = () => {
 
+                    /*
+                     * Önce eski metni unut.
+                     */
+
+                    currentStory =
+                        null;
+
+
                     setOrientation(
                         nextPhoto.orientation
                     );
@@ -510,8 +589,7 @@
 
 
                     /*
-                     * Bu fotoğrafın metni
-                     * var mı kontrol et.
+                     * Aynı isimli .txt var mı?
                      */
 
                     loadStory(
@@ -539,6 +617,10 @@
                 };
 
 
+                /*
+                 * İlk fotoğraf
+                 */
+
                 if (immediate) {
 
                     showPhoto();
@@ -547,15 +629,18 @@
                 }
 
 
+                /*
+                 * Önce eski fotoğrafı soldur.
+                 */
+
                 photo.classList.remove(
                     "visible"
                 );
 
 
-                storyHint.classList.remove(
-                    "visible"
-                );
-
+                /*
+                 * Sonra yenisini getir.
+                 */
 
                 setTimeout(
                     showPhoto,
@@ -563,6 +648,11 @@
                 );
             };
 
+
+            /*
+             * Fotoğraf dosyası yoksa
+             * galeriyi durdurma.
+             */
 
             loader.onerror = () => {
 
@@ -585,44 +675,31 @@
 
         /*
          * ==================================================
-         * HİKÂYE OVERLAY
+         * HİKÂYE
          * ==================================================
          */
 
-        const storyOverlay =
-            document.getElementById(
-                "story-overlay"
-            );
-
-
-        const storyText =
-            document.getElementById(
-                "story-text"
-            );
-
-
-        const storyClose =
-            document.getElementById(
-                "story-close"
-            );
-
-
-
         function openStory() {
 
+            /*
+             * Metin yoksa:
+             *
+             * HİÇBİR ŞEY YAPMA.
+             */
+
             if (!currentStory) {
+
                 return;
             }
 
 
-            /*
-             * textContent kullanıyoruz.
-             * .txt içindeki metin HTML olarak
-             * çalıştırılmıyor.
-             */
-
             storyText.textContent =
                 currentStory;
+
+
+            document.body.classList.add(
+                "story-open"
+            );
 
 
             storyOverlay.classList.add(
@@ -634,13 +711,7 @@
                 "aria-hidden",
                 "false"
             );
-
-
-            document.body.classList.add(
-                "story-open"
-            );
         }
-
 
 
         function closeStory() {
@@ -663,20 +734,110 @@
 
 
 
-        photoFrame.addEventListener(
-            "click",
-            openStory
-        );
-
-
-        storyClose.addEventListener(
-            "click",
-            closeStory
-        );
+        /*
+         * ==================================================
+         * ETKİLEŞİM
+         * ==================================================
+         */
 
 
         /*
-         * Panelin dışına dokununca kapat.
+         * FOTOĞRAFA TIKLA
+         *
+         * Metin varsa aç.
+         * Metin yoksa hiçbir şey yapma.
+         */
+
+        photoFrame.addEventListener(
+            "click",
+            event => {
+
+                /*
+                 * Bu tıklamanın lovePage'e
+                 * ulaşmasını engelliyoruz.
+                 *
+                 * Böylece metin yoksa bile
+                 * fotoğraf değişmez.
+                 */
+
+                event.stopPropagation();
+
+
+                openStory();
+            }
+        );
+
+
+
+        /*
+         * TAHTAYA TIKLA
+         *
+         * Hiçbir şey yapma.
+         */
+
+        board.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+            }
+        );
+
+
+
+        /*
+         * BOŞ KREM ALANA TIKLA
+         *
+         * Sonraki fotoğrafa geç.
+         */
+
+        lovePage.addEventListener(
+            "click",
+            () => {
+
+                changePhoto();
+            }
+        );
+
+
+
+        /*
+         * X'e tıkla.
+         */
+
+        storyClose.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+
+                closeStory();
+            }
+        );
+
+
+
+        /*
+         * Yazının üzerine tıklayınca
+         * hiçbir şey yapma.
+         */
+
+        storyPanel.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+            }
+        );
+
+
+
+        /*
+         * Yazının DIŞINDAKİ
+         * karanlık alana tıkla:
+         *
+         * kapat.
          */
 
         storyOverlay.addEventListener(
@@ -692,6 +853,7 @@
                 }
             }
         );
+
 
 
         /*
@@ -723,13 +885,23 @@
         changePhoto(true);
 
 
+
         /*
+         * ==================================================
+         * OTOMATİK DEĞİŞİM
+         * ==================================================
+         *
          * Her 30 saniyede bir.
          */
 
         setInterval(
 
             () => {
+
+                /*
+                 * Sekme açıksa
+                 * ve yazı okunmuyorsa.
+                 */
 
                 if (
                     document.visibilityState ===
@@ -747,7 +919,9 @@
             30000
         );
 
+
     </script>
 
 </body>
+
 </html>
