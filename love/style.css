@@ -1,37 +1,13 @@
-:root {
-
-    --background: #f5f1e8;
-
-    --board: #2d4a3e;
-    --board-edge: #6d4c35;
-
-    --chalk: #f7f3e8;
-    --chalk-soft: rgba(247, 243, 232, 0.72);
-}
-
-
-/* --------------------------------------------------
-   Base
--------------------------------------------------- */
-
-* {
-    box-sizing: border-box;
-}
-
-
 html,
 body {
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
 }
 
-
 body {
-
-    margin: 0;
-
-    background:
-        var(--background);
+    background: var(--background);
 
     font-family:
         -apple-system,
@@ -40,21 +16,18 @@ body {
         Arial,
         sans-serif;
 
-    -webkit-font-smoothing:
-        antialiased;
+    -webkit-font-smoothing: antialiased;
 }
 
 
 /* --------------------------------------------------
-   Page
+   Page — ALWAYS ONE SCREEN
 -------------------------------------------------- */
 
 .love-page {
-
     width: 100%;
-
-    min-height: 100vh;
-    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
 
     display: flex;
     flex-direction: column;
@@ -62,98 +35,14 @@ body {
     align-items: center;
     justify-content: center;
 
-    gap:
-        clamp(
-            12px,
-            2.2svh,
-            24px
-        );
+    gap: clamp(10px, 2svh, 20px);
 
     padding:
-        clamp(
-            12px,
-            2.2svh,
-            26px
-        );
+        max(10px, env(safe-area-inset-top))
+        12px
+        max(10px, env(safe-area-inset-bottom));
 
     overflow: hidden;
-}
-
-
-/* --------------------------------------------------
-   Photo frame
--------------------------------------------------- */
-
-.photo-frame {
-
-    position: relative;
-
-    overflow: hidden;
-
-    flex-shrink: 1;
-
-    border-radius: 8px;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.035
-        );
-
-    box-shadow:
-        0 14px 36px
-        rgba(
-            0,
-            0,
-            0,
-            0.14
-        );
-
-    transition:
-        width 0.7s ease,
-        height 0.7s ease;
-}
-
-
-/*
- * Dikey fotoğraf
- */
-
-.photo-frame.portrait {
-
-    width:
-        min(
-            390px,
-            82vw
-        );
-
-    height:
-        min(
-            48svh,
-            520px
-        );
-}
-
-
-/*
- * Yatay fotoğraf
- */
-
-.photo-frame.landscape {
-
-    width:
-        min(
-            540px,
-            90vw
-        );
-
-    height:
-        min(
-            40svh,
-            390px
-        );
 }
 
 
@@ -161,33 +50,74 @@ body {
    Photo
 -------------------------------------------------- */
 
-.love-photo {
+.photo-frame {
+    position: relative;
 
+    /*
+     * Board kendi yüksekliğini alır.
+     * Fotoğraf geriye kalan alanı kullanır.
+     */
+    flex: 1 1 0;
+
+    min-height: 0;
+
+    max-width: 92vw;
+    width: 520px;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.035);
+
+    box-shadow:
+        0 10px 28px
+        rgba(0, 0, 0, 0.13);
+}
+
+
+/*
+ * Portrait / landscape için artık
+ * sabit height vermiyoruz.
+ */
+
+.photo-frame.portrait {
+    width: min(390px, 82vw);
+}
+
+.photo-frame.landscape {
+    width: min(560px, 92vw);
+}
+
+
+/* --------------------------------------------------
+   Image
+-------------------------------------------------- */
+
+.love-photo {
     display: block;
 
     width: 100%;
     height: 100%;
 
-    object-fit: cover;
+    /*
+     * Fotoğrafın hiçbir kısmını kesme.
+     */
+    object-fit: contain;
     object-position: center;
 
     opacity: 0;
 
-    transform:
-        scale(1.008);
-
     transition:
-        opacity 0.7s ease,
-        transform 5s ease;
+        opacity 0.7s ease;
 }
 
-
 .love-photo.visible {
-
     opacity: 1;
-
-    transform:
-        scale(1);
 }
 
 
@@ -196,213 +126,44 @@ body {
 -------------------------------------------------- */
 
 .board {
-
     position: relative;
 
-    width:
-        min(
-            520px,
-            90vw
-        );
+    /*
+     * Board küçülmesin.
+     */
+    flex: 0 0 auto;
 
-    flex-shrink: 0;
+    width: min(520px, 90vw);
 
     padding:
-        clamp(
-            22px,
-            3.2svh,
-            38px
-        )
-        22px
-        clamp(
-            20px,
-            3svh,
-            34px
-        );
-
+        clamp(18px, 2.8svh, 32px)
+        20px
+        clamp(17px, 2.6svh, 29px);
 
     text-align: center;
 
-
     background:
-
         radial-gradient(
             circle at 30% 20%,
-            rgba(
-                255,
-                255,
-                255,
-                0.025
-            ),
+            rgba(255, 255, 255, 0.025),
             transparent 38%
         ),
-
         radial-gradient(
             circle at 70% 75%,
-            rgba(
-                0,
-                0,
-                0,
-                0.06
-            ),
+            rgba(0, 0, 0, 0.06),
             transparent 42%
         ),
-
         var(--board);
 
-
     border:
-        clamp(
-            7px,
-            1.2vw,
-            11px
-        )
-        solid
-        var(--board-edge);
-
+        clamp(7px, 1.2vw, 11px)
+        solid var(--board-edge);
 
     border-radius: 5px;
 
-
     box-shadow:
-
-        0 14px 36px
-        rgba(
-            0,
-            0,
-            0,
-            0.15
-        ),
-
-        inset
-        0 0 35px
-        rgba(
-            0,
-            0,
-            0,
-            0.12
-        );
-}
-
-
-/* --------------------------------------------------
-   Names
--------------------------------------------------- */
-
-.names {
-
-    color:
-        var(--chalk);
-
-
-    font-family:
-        "Bradley Hand",
-        "Chalkboard SE",
-        "Comic Sans MS",
-        cursive;
-
-
-    font-size:
-        clamp(
-            40px,
-            8vw,
-            58px
-        );
-
-
-    line-height: 1;
-
-    letter-spacing:
-        0.01em;
-
-
-    text-shadow:
-        0 0 1px
-        rgba(
-            255,
-            255,
-            255,
-            0.5
-        );
-}
-
-
-/* --------------------------------------------------
-   Heart
--------------------------------------------------- */
-
-.heart {
-
-    display: inline-block;
-
-    margin:
-        0 8px;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
-
-    font-size:
-        0.72em;
-
-    vertical-align:
-        0.08em;
-}
-
-
-/* --------------------------------------------------
-   Counter
--------------------------------------------------- */
-
-.counter {
-
-    margin-top:
-        clamp(
-            16px,
-            2.2svh,
-            26px
-        );
-
-
-    color:
-        var(--chalk-soft);
-
-
-    font-family:
-        "Chalkboard SE",
-        "Bradley Hand",
-        -apple-system,
-        sans-serif;
-
-
-    font-size:
-        clamp(
-            21px,
-            4.5vw,
-            31px
-        );
-
-
-    font-weight: 500;
-
-    line-height: 1.2;
-
-    letter-spacing:
-        0.025em;
-
-    font-variant-numeric:
-        tabular-nums;
-
-
-    text-shadow:
-        0 0 1px
-        rgba(
-            255,
-            255,
-            255,
-            0.35
-        );
+        0 10px 28px rgba(0, 0, 0, 0.14),
+        inset 0 0 35px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -413,136 +174,65 @@ body {
 @media (max-width: 600px) {
 
     .love-page {
-
-        gap:
-            clamp(
-                10px,
-                1.8svh,
-                16px
-            );
+        gap: 10px;
 
         padding:
-            clamp(
-                10px,
-                1.8svh,
-                16px
-            );
+            max(8px, env(safe-area-inset-top))
+            8px
+            max(8px, env(safe-area-inset-bottom));
     }
-
 
     .photo-frame.portrait {
-
-        width:
-            min(
-                78vw,
-                370px
-            );
-
-        height:
-            min(
-                46svh,
-                480px
-            );
+        width: min(78vw, 370px);
     }
-
 
     .photo-frame.landscape {
-
-        width:
-            min(
-                92vw,
-                470px
-            );
-
-        height:
-            min(
-                36svh,
-                330px
-            );
+        width: min(94vw, 470px);
     }
 
-
     .board {
-
-        width:
-            min(
-                92vw,
-                470px
-            );
+        width: min(94vw, 430px);
 
         padding:
-            clamp(
-                18px,
-                2.7svh,
-                28px
-            )
+            clamp(15px, 2.2svh, 24px)
             14px;
     }
 
-
     .names {
-
         font-size:
-            clamp(
-                34px,
-                9.5vw,
-                48px
-            );
+            clamp(34px, 9vw, 48px);
     }
-
-
-    .heart {
-
-        margin-left: 4px;
-        margin-right: 4px;
-    }
-
 
     .counter {
-
         margin-top:
-            clamp(
-                14px,
-                1.8svh,
-                20px
-            );
-
+            clamp(10px, 1.6svh, 18px);
 
         font-size:
-            clamp(
-                19px,
-                5.8vw,
-                26px
-            );
+            clamp(18px, 5.5vw, 25px);
     }
 }
 
 
 /* --------------------------------------------------
-   Short screens
+   Very short screens
 -------------------------------------------------- */
 
-@media (max-height: 700px) {
+@media (max-height: 650px) {
 
-    .photo-frame.portrait {
-        height: 40svh;
+    .love-page {
+        gap: 7px;
     }
-
-
-    .photo-frame.landscape {
-        height: 33svh;
-    }
-
 
     .board {
-
-        padding:
-            16px
-            14px;
+        padding: 12px 14px;
     }
 
+    .names {
+        font-size: 32px;
+    }
 
     .counter {
-        margin-top: 12px;
+        margin-top: 8px;
+        font-size: 18px;
     }
 }
